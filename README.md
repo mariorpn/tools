@@ -17,8 +17,8 @@ bash script para verificar e comparar a versão do java de todos os containers d
 
 ```
 chmod +x check_java_ocp.sh
-oc login -u USER https://api.OCP.domain.example:6443
+oc login -u USER https://api.OCP_NAME.domain.example:6443
 ./check_java_ocp.sh
 ```
 
-PS: Substituir OCP pelo nome do cluster e "domain.example" pelo domínio onde o cluster está.
+PS: Substituir "USER" pelo usuário do cluster openshift, "OCP_NAME" pelo nome do cluster e "domain.example" pelo domínio onde o cluster está.

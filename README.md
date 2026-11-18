@@ -56,7 +56,7 @@ oc label namespace dummy \
 ```
 
 > **Referências oficiais da Red Hat:**
-> * [Red Hat Openshift KCS Solution](https://access.redhat.com/kb/4976641)
+> * [Red Hat Openshift KCS Solution — Debug node fail](https://access.redhat.com/kb/4976641)
 > * [Red Hat OpenShift Documentation — Investigating node issues (`oc debug`)](https://docs.openshift.com/container-platform/latest/support/troubleshooting/investigating-node-issues.html)
 > * [Red Hat OpenShift Documentation — Understanding and managing Pod Security Admission](https://docs.openshift.com/container-platform/latest/authentication/understanding-and-managing-pod-security-admission.html)
 

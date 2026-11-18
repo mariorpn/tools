@@ -62,7 +62,7 @@ oc label namespace dummy \
 
 ---
 
-## Como utilizar
+### Como utilizar
 
 ### 1. Valide se o namespace `dummy` existe
 ```bash

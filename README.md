@@ -48,11 +48,10 @@ Este procedimento executa uma varredura **somente leitura** em todos os nodes do
    * Caso o cluster ainda não possua esse namespace, crie-o antes de rodar o script:
 
 ```bash
-oc create namespace dummy
-oc label namespace dummy \
-  pod-security.kubernetes.io/enforce=privileged \
-  pod-security.kubernetes.io/audit=privileged \
-  pod-security.kubernetes.io/warn=privileged --overwrite
+$ oc new-project dummy
+$ oc patch namespace dummy --type=merge -p '{"metadata": {"annotations": { "scheduler.alpha.kubernetes.io/defaultTolerations": "[{\"operator\": \"Exists\"}]"}}}'
+$ oc adm policy add-scc-to-user privileged -z default -n dummy
+$ oc debug node/worker-0.example.redhat.com --to-namespace dummy
 ```
 
 > **Referências oficiais da Red Hat:**
@@ -65,8 +64,8 @@ oc label namespace dummy \
 ### Como utilizar
 
 ### 1. Valide se o namespace `dummy` existe
-```bash
-oc get ns dummy
+```
+$ oc get ns dummy
 ```
 *(Se retornar `NotFound`, execute os comandos da seção de **Pré-requisitos** antes de prosseguir).*
 
@@ -75,9 +74,9 @@ oc get ns dummy
 Baixe o arquivo `check_cpu_avx_ocp.sh` e execute os comandos
 
 ```
-chmod +x check_avx512_nodes.sh
+$ chmod +x check_avx512_nodes.sh
 $ oc login -u USER https://api.OCP_NAME.domain.example:6443
-./check_avx512_nodes.sh
+$ ./check_avx512_nodes.sh
 ```
 PS: Substituir "USER" pelo usuário do cluster openshift, "OCP_NAME" pelo nome do cluster e "domain.example" pelo domínio onde o cluster está.
 
@@ -85,10 +84,10 @@ PS: Substituir "USER" pelo usuário do cluster openshift, "OCP_NAME" pelo nome d
 
 * Os resultados detalhados ficam disponíveis no arquivo **`auditoria_avx512_nodes.csv`**.
 * Para listar apenas os nodes com a flag ativa:
-  ```bash
-  grep "AFETADO" auditoria_avx512_nodes.csv
+  ```
+  $ grep "AFETADO" auditoria_avx512_nodes.csv
   ```
 * Caso a política interna do ambiente exija a remoção do namespace temporário após o diagnóstico:
-  ```bash
-  oc delete namespace dummy
+  ```
+  $ oc delete namespace dummy
   ```

@@ -1,0 +1,58 @@
+---
+- name: Coletar versões do Java JDK nos endpoints (CVE-2026-114938)
+  hosts: all
+  become: yes
+  gather_facts: false
+  vars:
+    min_java_version: "17.0.6"
+  tasks:
+    - name: Verificar se o binário do Java está presente no PATH
+      shell: command -v java
+      register: java_check
+      failed_when: false
+      changed_when: false
+
+    - name: Extrair a string de versão do Java
+      shell: java -version 2>&1 | awk -F '"' '/version/ {print $2}' | head -n1
+      register: java_version_raw
+      when: java_check.rc == 0
+      changed_when: false
+
+    - name: Agrupar hosts com Java >= {{ min_java_version }} (Potencialmente vulneráveis)
+      group_by:
+        key: java_affected
+      when:
+        - java_check.rc == 0
+        - java_version_raw.stdout | length > 0
+        - java_version_raw.stdout is version(min_java_version, '>=')
+
+    - name: Agrupar hosts com Java < {{ min_java_version }} (Não afetados por este CVE)
+      group_by:
+        key: java_safe
+      when:
+        - java_check.rc == 0
+        - java_version_raw.stdout | length > 0
+        - java_version_raw.stdout is version(min_java_version, '<')
+
+    - name: Agrupar hosts sem Java no PATH
+      group_by:
+        key: no_java
+      when: java_check.rc != 0 or (java_version_raw.stdout | default('') | length == 0)
+
+    - name: "HOSTS AFETADOS (Java >= {{ min_java_version }})"
+      debug:
+        msg: "{{ groups['java_affected'] | default(['Nenhum host reportado nesta categoria']) }}"
+      delegate_to: localhost
+      run_once: true
+
+    - name: "HOSTS SEGUROS (Java < {{ min_java_version }})"
+      debug:
+        msg: "{{ groups['java_safe'] | default(['Nenhum host reportado nesta categoria']) }}"
+      delegate_to: localhost
+      run_once: true
+
+    - name: "HOSTS SEM JAVA"
+      debug:
+        msg: "{{ groups['no_java'] | default(['Nenhum host reportado nesta categoria']) }}"
+      delegate_to: localhost
+      run_once: true

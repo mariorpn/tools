@@ -4,16 +4,6 @@ DEBUG_NS="dummy"
 OUTPUT_CSV="auditoria_avx512_nodes.csv"
 echo "NODE,ARQUITETURA,STATUS,FLAG_CPU" > "$OUTPUT_CSV"
 
-# Garante que o namespace de debug exista com permissão privilegiada (PSA)
-#if ! oc get ns "$DEBUG_NS" >/dev/null 2>&1; then
-#  echo "Criando namespace '$DEBUG_NS' com perfil privileged para o oc debug..."
-#  oc create ns "$DEBUG_NS" >/dev/null
-#  oc label ns "$DEBUG_NS" \
-#    pod-security.kubernetes.io/enforce=privileged \
-#    pod-security.kubernetes.io/audit=privileged \
-#    pod-security.kubernetes.io/warn=privileged --overwrite >/dev/null
-#fi
-
 echo "Coletando lista de nodes do cluster..."
 
 # Obtém nome e arquitetura de cada node

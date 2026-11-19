@@ -10,7 +10,7 @@ playbook para listar VMs que possuem java e separar em uma lista as VMs que poss
 ```ansibleplaybook -i localhost, -c local check_java.yml -K```
 
 ### Executar em lista de servidores (inventory)
-```ansibleplaybook -i inventory.file -c local check_java.yml -K```
+```ansibleplaybook -i inventory.file check_java.yml -K```
 
 PS: O parâmetro "-K" é para passar a senha de sudo por conta do "become: yes"
 
